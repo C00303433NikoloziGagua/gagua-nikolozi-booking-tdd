@@ -28,6 +28,6 @@ public final class TimeSlot {
     }
 
     public Duration duration() {
-        return Duration.ZERO;
+        return Duration.between(start, end);
     }
 }
