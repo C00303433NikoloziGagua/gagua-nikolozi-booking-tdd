@@ -12,4 +12,12 @@ public final class TimeSlot {
             throw new IllegalArgumentException("end must be after start");
         }
     }
+
+    public LocalDateTime getStart() {
+        return null;
+    }
+
+    public LocalDateTime getEnd() {
+        return null;
+    }
 }
