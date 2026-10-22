@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,5 +33,12 @@ class TimeSlotTest {
         TimeSlot slot = new TimeSlot(TEN, ELEVEN);
         assertEquals(TEN, slot.getStart());
         assertEquals(ELEVEN, slot.getEnd());
+    }
+
+    @Test
+    void durationIsThirtyMinutes() {
+        LocalDateTime tenThirty = LocalDateTime.of(2027, 1, 11, 10, 30);
+        TimeSlot slot = new TimeSlot(TEN, tenThirty);
+        assertEquals(Duration.ofMinutes(30), slot.duration());
     }
 }
