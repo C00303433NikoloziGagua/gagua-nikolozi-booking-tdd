@@ -3,37 +3,34 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimeSlotTest {
+    private static final LocalDateTime NINE = LocalDateTime.of(2027, 1, 11, 9, 0);
+    private static final LocalDateTime TEN = LocalDateTime.of(2027, 1, 11, 10, 0);
+    private static final LocalDateTime ELEVEN = LocalDateTime.of(2027, 1, 11, 11, 0);
+
     @Test
     void endBeforeStartIsRejected() {
-        LocalDateTime ten = LocalDateTime.of(2027, 1, 11, 10, 0);
-        LocalDateTime nine = LocalDateTime.of(2027, 1, 11, 9, 0);
-        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(ten, nine));
+        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(TEN, NINE));
     }
 
     @Test
     void endEqualToStartIsRejected() {
-        LocalDateTime ten = LocalDateTime.of(2027, 1, 11, 10, 0);
-        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(ten, ten));
+        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(TEN, TEN));
     }
 
     @Test
     void nullStartIsRejected() {
-        LocalDateTime ten = LocalDateTime.of(2027, 1, 11, 10, 0);
-        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(null, ten));
+        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(null, TEN));
     }
 
     @Test
     void nullEndIsRejected() {
-        LocalDateTime ten = LocalDateTime.of(2027, 1, 11, 10, 0);
-        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(ten, null));
+        assertThrows(IllegalArgumentException.class, () -> new TimeSlot(TEN, null));
     }
 
     @Test
     void gettersReturnStartAndEnd() {
-        LocalDateTime ten = LocalDateTime.of(2027, 1, 11, 10, 0);
-        LocalDateTime eleven = LocalDateTime.of(2027, 1, 11, 11, 0);
-        TimeSlot slot = new TimeSlot(ten, eleven);
-        assertEquals(ten, slot.getStart());
-        assertEquals(eleven, slot.getEnd());
+        TimeSlot slot = new TimeSlot(TEN, ELEVEN);
+        assertEquals(TEN, slot.getStart());
+        assertEquals(ELEVEN, slot.getEnd());
     }
 }
