@@ -32,6 +32,8 @@ public final class TimeSlot {
     }
 
     public boolean overlaps(TimeSlot other) {
-        return false;
+        boolean startsBeforeOtherEnds = start.isBefore(other.end);
+        boolean otherStartsBeforeThisEnds = other.start.isBefore(end);
+        return startsBeforeOtherEnds && otherStartsBeforeThisEnds;
     }
 }
