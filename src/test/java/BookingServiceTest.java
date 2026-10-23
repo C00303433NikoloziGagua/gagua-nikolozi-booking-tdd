@@ -98,4 +98,10 @@ class BookingServiceTest {
         Booking booking = service.book("bob", "R1", slot(11, 12));
         assertEquals(new Booking("bob", "R1", slot(11, 12)), booking);
     }
+
+    @Test
+    void sameUserSameSlotTwoRoomsIsRejected() {
+        service.book("alice", "R1", slot(14, 15));
+        assertThrows(IllegalStateException.class, () -> service.book("alice", "R2", slot(14, 15)));
+    }
 }
