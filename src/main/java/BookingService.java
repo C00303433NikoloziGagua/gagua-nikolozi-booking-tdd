@@ -22,7 +22,8 @@ public class BookingService {
             new SlotMustNotBeTooLong(MAX_SLOT),  // R3
             new RoomMustBeFree(bookings),        // R4
             new UserMustBeFree(bookings),        // R5
-            new AtMostThreeActiveBookings(bookings, clock)   // D-1
+            new AtMostThreeActiveBookings(bookings, clock),  // D-1
+            new SlotMustBeWithinFourteenDays(clock)          // D-2
         );
     }
 
