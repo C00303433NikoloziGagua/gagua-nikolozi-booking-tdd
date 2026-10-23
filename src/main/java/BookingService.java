@@ -28,7 +28,14 @@ public class BookingService {
         if (tooLong) {
             throw new IllegalArgumentException("slot must last at most 3 hours");
         }
-        return new Booking(userId, roomId, slot);
+        for (Booking existing : bookings.findByRoom(roomId)) {
+            if (existing.getSlot().overlaps(slot)) {
+                throw new IllegalStateException("room is already booked");
+            }
+        }
+        Booking booking = new Booking(userId, roomId, slot);
+        bookings.save(booking);
+        return booking;
     }
 
     /** Cancel a user's booking. */
