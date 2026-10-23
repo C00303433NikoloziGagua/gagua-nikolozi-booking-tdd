@@ -10,12 +10,10 @@ class BookingTest {
 
     @Test
     void gettersReturnUserRoomAndSlot() {
-        TimeSlot slot = new TimeSlot(LocalDateTime.of(2027, 1, 11, 10, 0),
-                                     LocalDateTime.of(2027, 1, 11, 11, 0));
-        Booking booking = new Booking("alice", "R1", slot);
+        Booking booking = new Booking("alice", "R1", slot(10, 11));
         assertEquals("alice", booking.getUserId());
         assertEquals("R1", booking.getRoomId());
-        assertEquals(slot, booking.getSlot());
+        assertEquals(slot(10, 11), booking.getSlot());
     }
 
     @Test
