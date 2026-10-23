@@ -76,4 +76,13 @@ class BookingServiceTest {
     void cancellingMissingBookingIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> service.cancel("alice", "R1", slot(10, 11)));
     }
+
+    @Test
+    void bookingsAreListedEarliestFirst() {
+        service.book("alice", "R1", slot(14, 15));
+        service.book("alice", "R1", slot(10, 11));
+        List<Booking> expected = List.of(new Booking("alice", "R1", slot(10, 11)),
+                                         new Booking("alice", "R1", slot(14, 15)));
+        assertEquals(expected, service.bookingsFor("alice"));
+    }
 }
