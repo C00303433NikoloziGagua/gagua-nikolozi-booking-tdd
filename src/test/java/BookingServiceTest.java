@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import java.time.*;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,5 +35,15 @@ class BookingServiceTest {
     @Test
     void unknownRoomIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> service.book("alice", "R9", slot(10, 11)));
+    }
+
+    @ParameterizedTest(name = "{0}:00-{1}:00 is rejected")
+    @CsvSource({
+        "8, 9",    // in the past (spec example)
+        "8, 10",   // started before now (ruling)
+        "9, 10",   // starts exactly now (ruling)
+    })
+    void slotNotInFutureIsRejected(int startHour, int endHour) {
+        assertThrows(IllegalArgumentException.class, () -> service.book("alice", "R1", slot(startHour, endHour)));
     }
 }
