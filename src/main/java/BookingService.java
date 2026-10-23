@@ -20,20 +20,13 @@ public class BookingService {
     /** Book a room for a user. Returns the new booking. */
     public Booking book(String userId, String roomId, TimeSlot slot) {
         new RoomMustExist(rooms).check(userId, roomId, slot);
-        checkInFuture(slot);
+        new SlotMustBeInFuture(clock).check(userId, roomId, slot);
         checkNotTooLong(slot);
         checkRoomFree(roomId, slot);
         checkUserFree(userId, slot);
         Booking booking = new Booking(userId, roomId, slot);
         bookings.save(booking);
         return booking;
-    }
-
-    private void checkInFuture(TimeSlot slot) {
-        LocalDateTime now = LocalDateTime.now(clock);
-        if (!slot.getStart().isAfter(now)) {
-            throw new IllegalArgumentException("slot must be in the future");
-        }
     }
 
     private void checkNotTooLong(TimeSlot slot) {
