@@ -46,6 +46,10 @@ public class BookingService {
     /** Cancel a user's booking. */
     public void cancel(String userId, String roomId, TimeSlot slot) {
         Booking booking = new Booking(userId, roomId, slot);
+        boolean exists = bookings.findByUser(userId).contains(booking);
+        if (!exists) {
+            throw new IllegalArgumentException("no such booking");
+        }
         bookings.delete(booking);
     }
 
