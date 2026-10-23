@@ -63,4 +63,12 @@ class BookingServiceTest {
         service.book("alice", "R1", slot(10, 11));
         assertThrows(IllegalStateException.class, () -> service.book("alice", "R2", slot(10, 11)));
     }
+
+    @Test
+    void cancellingFreesTheSlot() {
+        service.book("alice", "R1", slot(10, 11));
+        service.cancel("alice", "R1", slot(10, 11));
+        Booking booking = service.book("bob", "R1", slot(10, 11));
+        assertEquals(new Booking("bob", "R1", slot(10, 11)), booking);
+    }
 }
