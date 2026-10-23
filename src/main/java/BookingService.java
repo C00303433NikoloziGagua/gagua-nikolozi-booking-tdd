@@ -10,25 +10,30 @@ public class BookingService {
     private final IRoomRepository rooms;
     private final IBookingRepository bookings;
     private final Clock clock;
+    private final List<BookingRule> rules;
 
     public BookingService(IRoomRepository rooms, IBookingRepository bookings, Clock clock) {
         this.rooms = rooms;
         this.bookings = bookings;
         this.clock = clock;
+        this.rules = List.of(
+            new RoomMustExist(rooms),            // R1
+            new SlotMustBeInFuture(clock),       // R2
+            new SlotMustNotBeTooLong(MAX_SLOT),  // R3
+            new RoomMustBeFree(bookings),        // R4
+            new UserMustBeFree(bookings)         // R5
+        );
     }
 
     /** Book a room for a user. Returns the new booking. */
     public Booking book(String userId, String roomId, TimeSlot slot) {
-        new RoomMustExist(rooms).check(userId, roomId, slot);
-        new SlotMustBeInFuture(clock).check(userId, roomId, slot);
-        new SlotMustNotBeTooLong(MAX_SLOT).check(userId, roomId, slot);
-        new RoomMustBeFree(bookings).check(userId, roomId, slot);
-        new UserMustBeFree(bookings).check(userId, roomId, slot);
+        for (BookingRule rule : rules) {
+            rule.check(userId, roomId, slot);
+        }
         Booking booking = new Booking(userId, roomId, slot);
         bookings.save(booking);
         return booking;
     }
-
 
     /** Cancel a user's booking. */
     public void cancel(String userId, String roomId, TimeSlot slot) {
