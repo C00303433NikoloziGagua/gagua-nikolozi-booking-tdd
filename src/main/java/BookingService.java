@@ -1,5 +1,7 @@
 import java.time.*;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookingService {
 
@@ -55,7 +57,9 @@ public class BookingService {
 
     /** A user's bookings, earliest first. */
     public List<Booking> bookingsFor(String userId) {
-        throw new UnsupportedOperationException("TODO: implement using TDD");
+        return bookings.findByUser(userId).stream()
+                .sorted(Comparator.comparing((Booking b) -> b.getSlot().getStart()))
+                .collect(Collectors.toList());
     }
 
 }
