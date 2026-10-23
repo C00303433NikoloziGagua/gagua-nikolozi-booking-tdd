@@ -24,6 +24,10 @@ public class BookingService {
         if (!slot.getStart().isAfter(now)) {
             throw new IllegalArgumentException("slot must be in the future");
         }
+        boolean tooLong = slot.duration().compareTo(MAX_SLOT) > 0;
+        if (tooLong) {
+            throw new IllegalArgumentException("slot must last at most 3 hours");
+        }
         return new Booking(userId, roomId, slot);
     }
 
