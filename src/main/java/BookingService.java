@@ -21,19 +21,12 @@ public class BookingService {
     public Booking book(String userId, String roomId, TimeSlot slot) {
         new RoomMustExist(rooms).check(userId, roomId, slot);
         new SlotMustBeInFuture(clock).check(userId, roomId, slot);
-        checkNotTooLong(slot);
+        new SlotMustNotBeTooLong(MAX_SLOT).check(userId, roomId, slot);
         checkRoomFree(roomId, slot);
         checkUserFree(userId, slot);
         Booking booking = new Booking(userId, roomId, slot);
         bookings.save(booking);
         return booking;
-    }
-
-    private void checkNotTooLong(TimeSlot slot) {
-        boolean tooLong = slot.duration().compareTo(MAX_SLOT) > 0;
-        if (tooLong) {
-            throw new IllegalArgumentException("slot must last at most 3 hours");
-        }
     }
 
     private void checkRoomFree(String roomId, TimeSlot slot) {
