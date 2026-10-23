@@ -20,6 +20,10 @@ public class BookingService {
         if (rooms.findById(roomId) == null) {
             throw new IllegalArgumentException("room does not exist");
         }
+        LocalDateTime now = LocalDateTime.now(clock);
+        if (!slot.getStart().isAfter(now)) {
+            throw new IllegalArgumentException("slot must be in the future");
+        }
         return new Booking(userId, roomId, slot);
     }
 
