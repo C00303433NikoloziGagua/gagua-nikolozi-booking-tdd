@@ -71,4 +71,9 @@ class BookingServiceTest {
         Booking booking = service.book("bob", "R1", slot(10, 11));
         assertEquals(new Booking("bob", "R1", slot(10, 11)), booking);
     }
+
+    @Test
+    void cancellingMissingBookingIsRejected() {
+        assertThrows(IllegalArgumentException.class, () -> service.cancel("alice", "R1", slot(10, 11)));
+    }
 }
