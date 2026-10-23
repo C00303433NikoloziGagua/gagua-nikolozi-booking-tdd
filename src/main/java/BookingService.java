@@ -19,30 +19,50 @@ public class BookingService {
 
     /** Book a room for a user. Returns the new booking. */
     public Booking book(String userId, String roomId, TimeSlot slot) {
+        checkRoomExists(roomId);
+        checkInFuture(slot);
+        checkNotTooLong(slot);
+        checkRoomFree(roomId, slot);
+        checkUserFree(userId, slot);
+        Booking booking = new Booking(userId, roomId, slot);
+        bookings.save(booking);
+        return booking;
+    }
+
+    private void checkRoomExists(String roomId) {
         if (rooms.findById(roomId) == null) {
             throw new IllegalArgumentException("room does not exist");
         }
+    }
+
+    private void checkInFuture(TimeSlot slot) {
         LocalDateTime now = LocalDateTime.now(clock);
         if (!slot.getStart().isAfter(now)) {
             throw new IllegalArgumentException("slot must be in the future");
         }
+    }
+
+    private void checkNotTooLong(TimeSlot slot) {
         boolean tooLong = slot.duration().compareTo(MAX_SLOT) > 0;
         if (tooLong) {
             throw new IllegalArgumentException("slot must last at most 3 hours");
         }
+    }
+
+    private void checkRoomFree(String roomId, TimeSlot slot) {
         for (Booking existing : bookings.findByRoom(roomId)) {
             if (existing.getSlot().overlaps(slot)) {
                 throw new IllegalStateException("room is already booked");
             }
         }
+    }
+
+    private void checkUserFree(String userId, TimeSlot slot) {
         for (Booking existing : bookings.findByUser(userId)) {
             if (existing.getSlot().overlaps(slot)) {
                 throw new IllegalStateException("user already has a booking at that time");
             }
         }
-        Booking booking = new Booking(userId, roomId, slot);
-        bookings.save(booking);
-        return booking;
     }
 
     /** Cancel a user's booking. */
