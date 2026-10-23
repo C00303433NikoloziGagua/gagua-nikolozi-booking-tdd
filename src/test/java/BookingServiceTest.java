@@ -112,4 +112,11 @@ class BookingServiceTest {
         service.book("alice", "R1", slot(12, 13));
         assertThrows(IllegalStateException.class, () -> service.book("alice", "R1", slot(13, 14)));
     }
+
+    @Test
+    void bookingTooFarAheadIsRejected() {
+        TimeSlot farAhead = new TimeSlot(LocalDateTime.of(2027, 1, 26, 10, 0),
+                                         LocalDateTime.of(2027, 1, 26, 11, 0));
+        assertThrows(IllegalArgumentException.class, () -> service.book("alice", "R1", farAhead));
+    }
 }
